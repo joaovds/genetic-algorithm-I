@@ -1,4 +1,4 @@
-package main
+package pkg
 
 type Population struct {
 	Chromosomes []*Chromosome

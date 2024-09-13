@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/joaovds/genetic-algorithm-I/pkg"
+)
 
 const (
 	WORD_TO_FIND          = "artificial"
@@ -9,7 +13,7 @@ const (
 )
 
 func main() {
-	population := GeneratePopulation(NUMBER_OF_CHROMOSOMES, NUMBER_OF_GENES)
+	population := pkg.GeneratePopulation(NUMBER_OF_CHROMOSOMES, NUMBER_OF_GENES)
 	for _, chromosome := range population.Chromosomes {
 		fmt.Println(chromosome.Genes)
 	}
