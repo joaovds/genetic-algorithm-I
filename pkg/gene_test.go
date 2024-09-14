@@ -16,12 +16,12 @@ func TestNewGene(t *testing.T) {
 
 func TestGenerateGene(t *testing.T) {
 	for range 500 {
-		t.Run("should return a gene with a rune value between 32 and 127", func(t *testing.T) {
+		t.Run("should return a gene with a rune value between MIN_ASCII_VALUE and MAX_ASCII_VALUE", func(t *testing.T) {
 			gene := GenerateGene()
 			assert.NotNil(t, gene)
 			assert.NotEmpty(t, gene)
-			assert.GreaterOrEqual(t, int(gene.Value), 32)
-			assert.LessOrEqual(t, int(gene.Value), 127)
+			assert.GreaterOrEqual(t, int(gene.Value), MIN_ASCII_VALUE)
+			assert.LessOrEqual(t, int(gene.Value), MAX_ASCII_VALUE)
 		})
 	}
 }

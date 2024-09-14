@@ -14,7 +14,7 @@ func TestNewChromosome(t *testing.T) {
 	for index := range n_genes {
 		genes[index] = *GenerateGene()
 	}
-	chromosome := newChromosome(genes)
+	chromosome := NewChromosome(genes)
 	assert.NotEmpty(t, chromosome)
 	assert.NotNil(t, chromosome)
 	assert.Equal(t, n_genes, len(chromosome.Genes))

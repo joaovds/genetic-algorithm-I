@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+const (
+	MIN_ASCII_VALUE = 65
+	MAX_ASCII_VALUE = 127
+)
+
 type Gene struct {
 	Value rune
 }
@@ -18,8 +23,8 @@ func GenerateGene() *Gene {
 	rnd := rand.New(randSource)
 	var geneValue rune
 	for {
-		newGeneValue := rnd.Intn(127)
-		if newGeneValue < 32 {
+		newGeneValue := rnd.Intn(MAX_ASCII_VALUE)
+		if newGeneValue < MIN_ASCII_VALUE {
 			continue
 		} else {
 			geneValue = rune(newGeneValue)

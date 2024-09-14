@@ -1,5 +1,7 @@
 package pkg
 
+import "sync"
+
 type Population struct {
 	Chromosomes []*Chromosome
 }
@@ -16,4 +18,16 @@ func GeneratePopulation(populationSize, numberOfGenes int) *Population {
 	}
 
 	return newPopulation(chromosomes)
+}
+
+func (p *Population) EvaluateFitness(target string) {
+	wg := sync.WaitGroup{}
+	for _, chromosome := range p.Chromosomes {
+		wg.Add(1)
+		go func() {
+			chromosome.CalculateFitness(target)
+			wg.Done()
+		}()
+	}
+	wg.Wait()
 }
