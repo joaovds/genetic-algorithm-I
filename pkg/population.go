@@ -1,6 +1,9 @@
 package pkg
 
-import "sync"
+import (
+	"sort"
+	"sync"
+)
 
 type Population struct {
 	Chromosomes []*Chromosome
@@ -30,4 +33,24 @@ func (p *Population) EvaluateFitness(target string) {
 		}()
 	}
 	wg.Wait()
+	p.SortByFitness()
+}
+
+func (p *Population) SortByFitness() {
+	sort.Slice(p.Chromosomes, func(i, j int) bool {
+		return p.Chromosomes[i].Fitness > p.Chromosomes[j].Fitness
+	})
+}
+
+func (p *Population) IsSortedByFitness() bool {
+	return sort.SliceIsSorted(p.Chromosomes, func(i, j int) bool {
+		return p.Chromosomes[i].Fitness > p.Chromosomes[j].Fitness
+	})
+}
+
+func (p *Population) IndividualExists(target string) bool {
+	if !p.IsSortedByFitness() {
+		p.SortByFitness()
+	}
+	return p.Chromosomes[0].GenesToString() == target
 }
