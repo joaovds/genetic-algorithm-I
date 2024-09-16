@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	MIN_ASCII_VALUE = 65
-	MAX_ASCII_VALUE = 127
+	MIN_ASCII_VALUE = 97
+	MAX_ASCII_VALUE = 122
 )
 
 type Gene struct {

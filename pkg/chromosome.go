@@ -42,3 +42,26 @@ func (c *Chromosome) CalculateFitness(target string) {
 	normalizedScore := 1 / (1 + errorScore) * 100
 	c.Fitness = normalizedScore
 }
+
+func (c *Chromosome) Crossover(partner Chromosome) [2]*Chromosome {
+	firstChild := new(Chromosome)
+	secondChild := new(Chromosome)
+	children := [2]*Chromosome{
+		firstChild,
+		secondChild,
+	}
+
+	if len(c.Genes) == 1 {
+		firstChild.Genes = append(firstChild.Genes, c.Genes...)
+		secondChild.Genes = append(secondChild.Genes, c.Genes...)
+		return children
+	}
+
+	crossoverPoint := len(c.Genes) / 2
+	firstChild.Genes = append([]Gene{}, c.Genes[:crossoverPoint]...)
+	firstChild.Genes = append(firstChild.Genes, partner.Genes[crossoverPoint:]...)
+	secondChild.Genes = append([]Gene{}, partner.Genes[:crossoverPoint]...)
+	secondChild.Genes = append(secondChild.Genes, c.Genes[crossoverPoint:]...)
+
+	return children
+}
