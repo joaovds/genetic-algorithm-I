@@ -24,10 +24,6 @@ func main() {
 	population.Chromosomes[NUMBER_OF_CHROMOSOMES-1] = mockChromosome
 
 	population.EvaluateFitness(WORD_TO_FIND)
-	for _, chromosome := range population.Chromosomes {
-		fmt.Println(chromosome.Genes, "=>", chromosome.GenesToString(), "=> fitness:", chromosome.Fitness)
-	}
-	fmt.Println(len(population.Chromosomes))
 	theBest := population.Chromosomes[0]
 	for _, chromosome := range population.Chromosomes {
 		if theBest.Fitness <= chromosome.Fitness {

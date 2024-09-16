@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"math"
 	"strings"
 )
@@ -34,9 +33,12 @@ func (c *Chromosome) GenesToString() string {
 func (c *Chromosome) CalculateFitness(target string) {
 	var errorScore float32
 	for i, gene := range c.Genes {
+		if gene.Value == rune(target[i]) {
+			continue
+		}
 		errorScore += float32(math.Abs(float64(gene.Value) - float64(target[i])))
+		errorScore += float32(i) * 0.2
 	}
-	normalizedScorePercent := 1 / (1 + errorScore) * 100
-	fmt.Println(c.Genes, "=>", normalizedScorePercent)
-	c.Fitness = normalizedScorePercent
+	normalizedScore := 1 / (1 + errorScore) * 100
+	c.Fitness = normalizedScore
 }
