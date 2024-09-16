@@ -8,6 +8,7 @@ import (
 const (
 	MIN_ASCII_VALUE = 97
 	MAX_ASCII_VALUE = 122
+	MUTATION_RATE   = 0.4
 )
 
 type Gene struct {
@@ -19,6 +20,11 @@ func newGene(value rune) *Gene {
 }
 
 func GenerateGene() *Gene {
+	geneValue := newGeneValue()
+	return newGene(geneValue)
+}
+
+func newGeneValue() rune {
 	randSource := rand.NewSource(time.Now().UnixNano())
 	rnd := rand.New(randSource)
 	var geneValue rune
@@ -31,5 +37,14 @@ func GenerateGene() *Gene {
 			break
 		}
 	}
-	return newGene(geneValue)
+	return geneValue
+}
+
+func (g *Gene) Mutate() {
+	randSource := rand.NewSource(time.Now().UnixNano())
+	rnd := rand.New(randSource)
+	mutationProb := rnd.Float64()
+	if mutationProb < MUTATION_RATE {
+		g.Value = newGeneValue()
+	}
 }

@@ -10,7 +10,7 @@ const (
 	WORD_TO_FIND          = "artificial"
 	NUMBER_OF_GENES       = len(WORD_TO_FIND)
 	NUMBER_OF_CHROMOSOMES = len(WORD_TO_FIND) * 10
-	MAX_GENERATIONS       = 1000
+	MAX_GENERATIONS       = 10000
 )
 
 func main() {

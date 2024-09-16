@@ -3,6 +3,7 @@ package pkg
 import (
 	"math"
 	"strings"
+	"sync"
 )
 
 type Chromosome struct {
@@ -62,6 +63,20 @@ func (c *Chromosome) Crossover(partner Chromosome) [2]*Chromosome {
 	firstChild.Genes = append(firstChild.Genes, partner.Genes[crossoverPoint:]...)
 	secondChild.Genes = append([]Gene{}, partner.Genes[:crossoverPoint]...)
 	secondChild.Genes = append(secondChild.Genes, c.Genes[crossoverPoint:]...)
+
+	wg := sync.WaitGroup{}
+	for _, child := range children {
+		wg.Add(1)
+		for _, gene := range child.Genes {
+			wg.Add(1)
+			go func() {
+				gene.Mutate()
+				wg.Done()
+			}()
+		}
+		wg.Done()
+	}
+	wg.Wait()
 
 	return children
 }
