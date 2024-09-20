@@ -33,21 +33,6 @@ func (g *geneticAlgorithm) Run() {
 	var population *Population
 	initialPopulation := InitialPopulation(g.numberOfChromosomes, g.geneQuantity)
 	population = initialPopulation
-	targetFound := false
-
-	artificialGenes := make([]*Gene, len(g.Target))
-	for i, value := range g.Target {
-		artificialGenes[i] = NewGene(value)
-	}
-	artificialGenes2 := make([]*Gene, len(g.Target))
-	for i, value := range g.Target {
-		artificialGenes2[i] = NewGene(value)
-	}
-	mockChromosome := NewChromosome(artificialGenes)
-	artificialGenes2[1].Value = rune(107)
-	mockChromosome2 := NewChromosome(artificialGenes2)
-	population.Chromosomes[g.numberOfChromosomes-1] = mockChromosome
-	population.Chromosomes[48] = mockChromosome2
 
 	for generation := range g.MaxGenerations {
 		population.EvaluateFitness(g.Target)
@@ -57,12 +42,10 @@ func (g *geneticAlgorithm) Run() {
 		fmt.Println("Middle:", population.Chromosomes[len(population.Chromosomes)/2].GenesToString(), "=> Fitness:", population.Chromosomes[len(population.Chromosomes)/2].Fitness, "=> Fitness normalized:", population.Chromosomes[len(population.Chromosomes)/2].NormalizedFitness)
 		fmt.Println("Worse:", population.Chromosomes[len(population.Chromosomes)-1].GenesToString(), "=> Fitness:", population.Chromosomes[len(population.Chromosomes)-1].Fitness, "=> Fitness normalized:", population.Chromosomes[len(population.Chromosomes)-1].NormalizedFitness)
 
-		for _, a := range population.Chromosomes {
-			fmt.Println(a.GenesToString())
-		}
-
-		if targetFound {
+		if population.Chromosomes[0].GenesToString() == g.Target {
 			break
 		}
+
+		population.GenerateNextGeration()
 	}
 }
