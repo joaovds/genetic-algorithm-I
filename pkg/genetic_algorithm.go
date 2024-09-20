@@ -46,6 +46,6 @@ func (g *geneticAlgorithm) Run() {
 			break
 		}
 
-		population.GenerateNextGeration()
+		population = population.GenerateNextGeration()
 	}
 }

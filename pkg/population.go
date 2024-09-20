@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+const (
+	ELITISM_NUMBER = 4
+)
+
 type Population struct {
 	Chromosomes  []*Chromosome
 	Size         int
@@ -83,9 +87,30 @@ func (p *Population) GenerateNextGeration() *Population {
 	nextGenerationChromosomes := make([]*Chromosome, p.Size)
 	parentsCrossed := make(map[string]bool)
 
-	parentsSelected := p.parentSelection(&parentsCrossed)
-	fmt.Println(parentsSelected[0].GenesToString())
-	fmt.Println(parentsSelected[1].GenesToString())
+	numberOfNewChromosomes := 0
+	// elitism
+	for i := range ELITISM_NUMBER {
+		nextGenerationChromosomes[i] = p.Chromosomes[i]
+		numberOfNewChromosomes++
+	}
+
+	for {
+		parentsSelected := p.parentSelection(&parentsCrossed)
+		fmt.Println("Parent 1", parentsSelected[0].GenesToString())
+		fmt.Println("Parent 2", parentsSelected[1].GenesToString())
+		children := parentsSelected[0].Crossover(parentsSelected[1])
+
+		for _, child := range children {
+			if numberOfNewChromosomes < len(nextGenerationChromosomes) {
+				nextGenerationChromosomes[numberOfNewChromosomes] = child
+				numberOfNewChromosomes++
+			}
+		}
+
+		if numberOfNewChromosomes >= len(nextGenerationChromosomes) {
+			break
+		}
+	}
 
 	return GeneratePopulation(nextGenerationChromosomes)
 }
