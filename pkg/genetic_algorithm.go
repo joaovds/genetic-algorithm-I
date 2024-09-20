@@ -47,5 +47,10 @@ func (g *geneticAlgorithm) Run() {
 		}
 
 		population = population.GenerateNextGeration()
+		fmt.Println("Nova População:")
+		for _, c := range population.Chromosomes {
+			fmt.Println(c.GenesToString())
+		}
+		fmt.Println()
 	}
 }

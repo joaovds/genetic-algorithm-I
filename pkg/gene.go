@@ -37,3 +37,7 @@ func RandomGeneValue() rune {
 	}
 	return geneValue
 }
+
+func (g *Gene) Mutate() {
+	g.Value = RandomGeneValue()
+}

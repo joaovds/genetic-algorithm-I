@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	ELITISM_NUMBER = 4
+	ELITISM_NUMBER = 2
 )
 
 type Population struct {
@@ -94,10 +94,8 @@ func (p *Population) GenerateNextGeration() *Population {
 		numberOfNewChromosomes++
 	}
 
-	for {
+	for numberOfNewChromosomes < p.Size {
 		parentsSelected := p.parentSelection(&parentsCrossed)
-		fmt.Println("Parent 1", parentsSelected[0].GenesToString())
-		fmt.Println("Parent 2", parentsSelected[1].GenesToString())
 		children := parentsSelected[0].Crossover(parentsSelected[1])
 
 		for _, child := range children {
@@ -105,10 +103,6 @@ func (p *Population) GenerateNextGeration() *Population {
 				nextGenerationChromosomes[numberOfNewChromosomes] = child
 				numberOfNewChromosomes++
 			}
-		}
-
-		if numberOfNewChromosomes >= len(nextGenerationChromosomes) {
-			break
 		}
 	}
 

@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	geneticAlgorithm := pkg.NewGeneticAlgorithm("artificial", 10000)
+	geneticAlgorithm := pkg.NewGeneticAlgorithm("artificial", 150)
 	geneticAlgorithm.Run()
 }

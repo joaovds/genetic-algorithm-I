@@ -1,13 +1,15 @@
 package pkg
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 	"time"
 )
 
 const (
-	CROSSOVER_RATE = 0.8 // 80%
+	CROSSOVER_RATE = 1
+	MUTATION_RATE  = 0.1
 )
 
 type Chromosome struct {
@@ -54,6 +56,9 @@ func (c *Chromosome) Crossover(partner *Chromosome) (children [2]*Chromosome) {
 	randSource := rand.NewSource(time.Now().UnixNano())
 	rnd := rand.New(randSource)
 
+	fmt.Println("p1", c.GenesToString())
+	fmt.Println("p2", partner.GenesToString())
+
 	child1, child2 := new(Chromosome), new(Chromosome)
 	children = [2]*Chromosome{
 		child1, child2,
@@ -68,5 +73,20 @@ func (c *Chromosome) Crossover(partner *Chromosome) (children [2]*Chromosome) {
 		child1.Genes = c.Genes
 		child2.Genes = partner.Genes
 	}
+
+	child1.mutation()
+	child2.mutation()
+
 	return children
+}
+
+func (c *Chromosome) mutation() {
+	randSource := rand.NewSource(time.Now().UnixNano())
+	rnd := rand.New(randSource)
+
+	for _, gene := range c.Genes {
+		if rnd.Float64() < MUTATION_RATE {
+			gene.Mutate()
+		}
+	}
 }
