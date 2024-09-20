@@ -1,9 +1,13 @@
 package pkg
 
+import (
+	"fmt"
+	"log"
+)
+
 type geneticAlgorithm struct {
-	GenerationCount     chan int
 	Target              string
-	numberOfGenes       int
+	geneQuantity        int
 	numberOfChromosomes int
 	MaxGenerations      int
 }
@@ -11,15 +15,14 @@ type geneticAlgorithm struct {
 func NewGeneticAlgorithm(target string, maxGenerations int) *geneticAlgorithm {
 	return &geneticAlgorithm{
 		Target:              target,
-		numberOfGenes:       len(target),
+		geneQuantity:        len(target),
 		numberOfChromosomes: len(target) * 10,
 		MaxGenerations:      maxGenerations,
-		GenerationCount:     make(chan int),
 	}
 }
 
-func (g *geneticAlgorithm) GetNumberOfGenes() int {
-	return g.numberOfGenes
+func (g *geneticAlgorithm) GetGeneQuantity() int {
+	return g.geneQuantity
 }
 
 func (g *geneticAlgorithm) GetNumberOfChromosomes() int {
@@ -27,8 +30,20 @@ func (g *geneticAlgorithm) GetNumberOfChromosomes() int {
 }
 
 func (g *geneticAlgorithm) Run() {
+	var population *Population
+	initialPopulation := InitialPopulation(g.numberOfChromosomes, g.geneQuantity)
+	population = initialPopulation
+	targetFound := false
+
 	for generation := range g.MaxGenerations {
-		g.GenerationCount <- generation + 1
+		log.Println("Generation:", generation+1)
+		fmt.Println("Population:")
+		for _, chromosome := range population.Chromosomes {
+			fmt.Println(chromosome.GenesToString())
+		}
+
+		if targetFound {
+			break
+		}
 	}
-	close(g.GenerationCount)
 }
