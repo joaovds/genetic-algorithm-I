@@ -36,11 +36,14 @@ func (g *geneticAlgorithm) Run() {
 	targetFound := false
 
 	for generation := range g.MaxGenerations {
+		population.EvaluateFitness(g.Target)
+
 		log.Println("Generation:", generation+1)
 		fmt.Println("Population:")
 		for _, chromosome := range population.Chromosomes {
-			fmt.Println(chromosome.GenesToString())
+			fmt.Println(chromosome.GenesToString(), "=> Fitness:", chromosome.Fitness, "=> Fitness normalized:", chromosome.NormalizedFitness)
 		}
+		fmt.Println("Population Fitness Total:", population.TotalFitness)
 
 		if targetFound {
 			break

@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	MIN_ASCII_VALUE = 97
+	MIN_ASCII_VALUE = 65
 	MAX_ASCII_VALUE = 122
 )
 

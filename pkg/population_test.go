@@ -8,7 +8,7 @@ import (
 
 func TestGeneratePopulation(t *testing.T) {
 	t.Run("should return a population with the passed chromosomes", func(t *testing.T) {
-		chromosomes := []Chromosome{*GenerateRandomChromosome(2), *GenerateRandomChromosome(2)}
+		chromosomes := []*Chromosome{GenerateRandomChromosome(2), GenerateRandomChromosome(2)}
 		population := GeneratePopulation(chromosomes)
 		assert.Equal(t, chromosomes, population.Chromosomes)
 		assert.Equal(t, len(chromosomes), population.Size)
