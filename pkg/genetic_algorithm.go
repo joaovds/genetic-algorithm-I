@@ -26,20 +26,6 @@ func (g *geneticAlgorithm) Run() {
 	initialPopulation := InitialPopulation(g.numberOfChromosomes, g.geneQuantity)
 	population = initialPopulation
 
-	artificialGenes := make([]*Gene, len(g.Target))
-	for i, value := range g.Target {
-		artificialGenes[i] = NewGene(value)
-	}
-	artificialGenes2 := make([]*Gene, len(g.Target))
-	for i, value := range g.Target {
-		artificialGenes2[i] = NewGene(value)
-	}
-	mockChromosome := NewChromosome(artificialGenes)
-	artificialGenes2[1].Value = rune(113)
-	mockChromosome2 := NewChromosome(artificialGenes2)
-	population.Chromosomes[g.numberOfChromosomes-1] = mockChromosome
-	population.Chromosomes[48] = mockChromosome2
-
 	for generation := range g.MaxGenerations {
 		population.EvaluateFitness(g.Target)
 
@@ -53,5 +39,7 @@ func (g *geneticAlgorithm) Run() {
 			fmt.Println("\n Target found! =>", population.Chromosomes[0].GenesToString())
 			break
 		}
+
+		population = population.GenerateNextGeration()
 	}
 }

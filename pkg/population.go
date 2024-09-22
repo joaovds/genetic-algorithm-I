@@ -1,8 +1,11 @@
 package pkg
 
 import (
+	"fmt"
+	"math/rand"
 	"sort"
 	"sync"
+	"time"
 )
 
 type Population struct {
@@ -93,4 +96,51 @@ func (p *Population) sortByFitness() {
 	sort.Slice(p.Chromosomes, func(i, j int) bool {
 		return p.Chromosomes[i].Fitness < p.Chromosomes[j].Fitness
 	})
+}
+
+func (p *Population) GenerateNextGeration() *Population {
+	parents := p.parentSelection()
+	fmt.Println("Parents:")
+	for _, parent := range parents {
+		fmt.Println(parent.GenesToString())
+	}
+
+	children := Crossover(*parents[0], *parents[1])
+	fmt.Println("Children:")
+	for _, child := range children {
+		fmt.Println(child.GenesToString())
+	}
+
+	return GeneratePopulation(p.Chromosomes)
+}
+
+func (p *Population) parentSelection() [2]*Chromosome {
+	randSource := rand.NewSource(time.Now().UnixNano())
+	rnd := rand.New(randSource)
+
+	parent1Random := rnd.Float64()
+	parent2Random := rnd.Float64()
+	parent1Index := 0
+	parents := [2]*Chromosome{}
+
+	fitnessAccumulated := 0.0
+	for i := range p.Size {
+		fitnessAccumulated += p.Chromosomes[i].NormalizedFitness
+		if fitnessAccumulated >= parent1Random {
+			parents[0] = p.Chromosomes[i]
+			parent1Index = i
+			break
+		}
+	}
+
+	fitnessAccumulated = 0.0
+	for i := range p.Size {
+		fitnessAccumulated += p.Chromosomes[i].NormalizedFitness
+		if fitnessAccumulated >= parent2Random && i != parent1Index {
+			parents[1] = p.Chromosomes[i]
+			break
+		}
+	}
+
+	return parents
 }

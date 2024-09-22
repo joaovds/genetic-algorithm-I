@@ -1,6 +1,12 @@
 package pkg
 
-import "strings"
+import (
+	"math/rand"
+	"strings"
+	"time"
+)
+
+const CROSSOVER_RATE = 0.8 // 80%
 
 type Chromosome struct {
 	Genes             []*Gene
@@ -42,4 +48,28 @@ func (c *Chromosome) CalculateFitness(target string) int {
 	}
 	c.Fitness = fitness
 	return fitness
+}
+
+func Crossover(parent1, parent2 Chromosome) [2]*Chromosome {
+	randSource := rand.NewSource(time.Now().UnixNano())
+	rnd := rand.New(randSource)
+
+	child1 := new(Chromosome)
+	child2 := new(Chromosome)
+	children := [2]*Chromosome{child1, child2}
+
+	crossoverProbability := rnd.Float64()
+	println("Crossover probability:", crossoverProbability)
+	if crossoverProbability < CROSSOVER_RATE {
+		crossoverPoint := rnd.Intn(len(parent1.Genes))
+
+		child1.Genes = append([]*Gene{}, parent1.Genes[:crossoverPoint]...)
+		child1.Genes = append(child1.Genes, parent2.Genes[crossoverPoint:]...)
+		child2.Genes = append([]*Gene{}, parent2.Genes[:crossoverPoint]...)
+		child2.Genes = append(child2.Genes, parent1.Genes[crossoverPoint:]...)
+	} else {
+		child1.Genes = parent1.Genes
+		child2.Genes = parent2.Genes
+	}
+	return children
 }
