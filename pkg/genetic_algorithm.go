@@ -48,5 +48,10 @@ func (g *geneticAlgorithm) Run() {
 			fmt.Println(c.GenesToString(), "=>", c.NormalizedFitness)
 		}
 		fmt.Println()
+
+		if population.Chromosomes[0].GenesToString() == g.Target {
+			fmt.Println("\n Target found! =>", population.Chromosomes[0].GenesToString())
+			break
+		}
 	}
 }
