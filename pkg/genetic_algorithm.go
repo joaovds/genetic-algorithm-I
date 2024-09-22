@@ -27,9 +27,11 @@ func (g *geneticAlgorithm) Run() {
 	population = initialPopulation
 
 	for generation := range g.MaxGenerations {
+		population.EvaluateFitness(g.Target)
+
 		log.Println("Generation:", generation+1)
 		for _, c := range population.Chromosomes {
-			fmt.Println(c.GenesToString())
+			fmt.Println(c.GenesToString(), "=>", c.NormalizedFitness)
 		}
 		fmt.Println()
 	}

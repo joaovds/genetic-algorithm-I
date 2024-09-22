@@ -3,7 +3,9 @@ package pkg
 import "strings"
 
 type Chromosome struct {
-	Genes []*Gene
+	Genes             []*Gene
+	Fitness           int
+	NormalizedFitness float64
 }
 
 func NewChromosome(genes []*Gene) *Chromosome {
@@ -26,4 +28,18 @@ func (c *Chromosome) GenesToString() string {
 		genesStrBuilder.WriteRune(gene.Value)
 	}
 	return genesStrBuilder.String()
+}
+
+func (c *Chromosome) CalculateFitness(target string) int {
+	if len(c.Genes) != len(target) {
+		return 0
+	}
+
+	var fitness int
+	for i, gene := range c.Genes {
+		diff := int(target[i]) - int(gene.Value)
+		fitness += diff * diff
+	}
+	c.Fitness = fitness
+	return fitness
 }
