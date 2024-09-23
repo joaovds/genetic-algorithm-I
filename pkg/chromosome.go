@@ -3,6 +3,7 @@ package pkg
 import (
 	"math/rand"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -58,18 +59,37 @@ func Crossover(parent1, parent2 Chromosome) [2]*Chromosome {
 	child2 := new(Chromosome)
 	children := [2]*Chromosome{child1, child2}
 
+	parent1GenesCopy := make([]*Gene, len(parent1.Genes))
+	copy(parent1GenesCopy, parent1.Genes)
+	parent2GenesCopy := make([]*Gene, len(parent2.Genes))
+	copy(parent2GenesCopy, parent2.Genes)
+
 	crossoverProbability := rnd.Float64()
-	println("Crossover probability:", crossoverProbability)
 	if crossoverProbability < CROSSOVER_RATE {
 		crossoverPoint := rnd.Intn(len(parent1.Genes))
 
-		child1.Genes = append([]*Gene{}, parent1.Genes[:crossoverPoint]...)
-		child1.Genes = append(child1.Genes, parent2.Genes[crossoverPoint:]...)
-		child2.Genes = append([]*Gene{}, parent2.Genes[:crossoverPoint]...)
-		child2.Genes = append(child2.Genes, parent1.Genes[crossoverPoint:]...)
+		child1.Genes = append([]*Gene{}, parent1GenesCopy[:crossoverPoint]...)
+		child1.Genes = append(child1.Genes, parent2GenesCopy[crossoverPoint:]...)
+		child2.Genes = append([]*Gene{}, parent2GenesCopy[:crossoverPoint]...)
+		child2.Genes = append(child2.Genes, parent1GenesCopy[crossoverPoint:]...)
 	} else {
 		child1.Genes = parent1.Genes
 		child2.Genes = parent2.Genes
 	}
+
+	wg := &sync.WaitGroup{}
+	for _, child := range children {
+		wg.Add(1)
+		for _, gene := range child.Genes {
+			wg.Add(1)
+			go func() {
+				gene.Mutate()
+				wg.Done()
+			}()
+		}
+		wg.Done()
+	}
+	wg.Wait()
+
 	return children
 }

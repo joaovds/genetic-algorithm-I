@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -8,6 +9,7 @@ import (
 const (
 	MIN_ASCII_VALUE = 97
 	MAX_ASCII_VALUE = 122
+	MUTATION_RATE   = 0.4
 )
 
 type Gene struct {
@@ -36,4 +38,16 @@ func RandomGeneValue() rune {
 		}
 	}
 	return geneValue
+}
+
+func (g *Gene) Mutate() {
+	randSource := rand.NewSource(time.Now().UnixNano())
+	rnd := rand.New(randSource)
+	mutationProb := rnd.Float64()
+	if mutationProb < MUTATION_RATE {
+		fmt.Println("Gene Mutate from:", g.Value)
+		g.Value = RandomGeneValue()
+
+		fmt.Println("Gene Mutate to:", g.Value)
+	}
 }
