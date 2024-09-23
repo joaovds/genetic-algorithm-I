@@ -1,11 +1,14 @@
 package pkg
 
 import (
-	"fmt"
 	"math/rand"
 	"sort"
 	"sync"
 	"time"
+)
+
+const (
+	ELITISM_NUMBER = 4
 )
 
 type Population struct {
@@ -99,19 +102,34 @@ func (p *Population) sortByFitness() {
 }
 
 func (p *Population) GenerateNextGeration() *Population {
-	parents := p.parentSelection()
-	fmt.Println("Parents:")
-	for _, parent := range parents {
-		fmt.Println(parent.GenesToString())
+	nextGenerationChromosomes := make([]*Chromosome, p.Size)
+	numberOfNewChromosomes := 0
+	// elitism
+	for i := range ELITISM_NUMBER {
+		if i == p.Size {
+			break
+		}
+		nextGenerationChromosomes[i] = p.Chromosomes[i]
+		numberOfNewChromosomes++
 	}
 
-	children := Crossover(*parents[0], *parents[1])
-	fmt.Println("Children:")
-	for _, child := range children {
-		fmt.Println(child.GenesToString())
+	for {
+		parents := p.parentSelection()
+		children := Crossover(*parents[0], *parents[1])
+
+		for _, child := range children {
+			if numberOfNewChromosomes < len(nextGenerationChromosomes) {
+				nextGenerationChromosomes[numberOfNewChromosomes] = child
+				numberOfNewChromosomes++
+			}
+		}
+
+		if numberOfNewChromosomes >= len(nextGenerationChromosomes) {
+			break
+		}
 	}
 
-	return GeneratePopulation(p.Chromosomes)
+	return GeneratePopulation(nextGenerationChromosomes)
 }
 
 func (p *Population) parentSelection() [2]*Chromosome {
@@ -120,7 +138,6 @@ func (p *Population) parentSelection() [2]*Chromosome {
 
 	parent1Random := rnd.Float64()
 	parent2Random := rnd.Float64()
-	parent1Index := 0
 	parents := [2]*Chromosome{}
 
 	fitnessAccumulated := 0.0
@@ -128,7 +145,6 @@ func (p *Population) parentSelection() [2]*Chromosome {
 		fitnessAccumulated += p.Chromosomes[i].NormalizedFitness
 		if fitnessAccumulated >= parent1Random {
 			parents[0] = p.Chromosomes[i]
-			parent1Index = i
 			break
 		}
 	}
@@ -136,7 +152,7 @@ func (p *Population) parentSelection() [2]*Chromosome {
 	fitnessAccumulated = 0.0
 	for i := range p.Size {
 		fitnessAccumulated += p.Chromosomes[i].NormalizedFitness
-		if fitnessAccumulated >= parent2Random && i != parent1Index {
+		if fitnessAccumulated >= parent2Random {
 			parents[1] = p.Chromosomes[i]
 			break
 		}

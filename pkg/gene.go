@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -38,16 +37,4 @@ func RandomGeneValue() rune {
 		}
 	}
 	return geneValue
-}
-
-func (g *Gene) Mutate() {
-	randSource := rand.NewSource(time.Now().UnixNano())
-	rnd := rand.New(randSource)
-	mutationProb := rnd.Float64()
-	if mutationProb < MUTATION_RATE {
-		fmt.Println("Gene Mutate from:", g.Value)
-		g.Value = RandomGeneValue()
-
-		fmt.Println("Gene Mutate to:", g.Value)
-	}
 }

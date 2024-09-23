@@ -30,10 +30,10 @@ func (g *geneticAlgorithm) Run() {
 		population.EvaluateFitness(g.Target)
 
 		log.Println("Generation:", generation+1)
-		for _, c := range population.Chromosomes {
-			fmt.Println(c.GenesToString(), "=>", c.NormalizedFitness)
-		}
-		fmt.Println()
+		fmt.Println("Better:", population.Chromosomes[0].GenesToString(), "=> Fitness Normalized:", population.Chromosomes[0].NormalizedFitness)
+		fmt.Println("Middle:", population.Chromosomes[population.Size/2].GenesToString(), "=> Fitness Normalized:", population.Chromosomes[population.Size/2].NormalizedFitness)
+		fmt.Println("Worse:", population.Chromosomes[population.Size-1].GenesToString(), "=> Fitness Normalized:", population.Chromosomes[population.Size-1].NormalizedFitness)
+		println()
 
 		if population.Chromosomes[0].GenesToString() == g.Target {
 			fmt.Println("\n Target found! =>", population.Chromosomes[0].GenesToString())
